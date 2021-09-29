@@ -1,4 +1,5 @@
 from lab2.utils import get_random_number_generator
+import numpy as np
 
 
 class BoxWindow:
@@ -10,7 +11,7 @@ class BoxWindow:
         Args:
             args ([type]): [description]
         """
-        self.bounds = None
+        self.bounds = np.array(args)
 
     def __str__(self):
         r"""BoxWindow: :math:`[a_1, b_1] \times [a_2, b_2] \times \cdots`
@@ -18,21 +19,42 @@ class BoxWindow:
         Returns:
             [type]: [description]
         """
-        return ""
+        res = "BoxWindow: "
+        for i in range(len(self.bounds) - 1):
+            res = res + "["
+            n = len(self.bounds[i])
+            for j in range(n - 1):
+                res = res + str(self.bounds[i][j]) + ", "
+            res = res + str(self.bounds[i][n - 1]) + "] x "
+        res = res + "["
+        n = len(self.bounds[len(self.bounds) - 1])
+        for j in range(n - 1):
+            res = res + str(self.bounds[len(self.bounds) - 1][j]) + ", "
+        res = res + str(self.bounds[len(self.bounds) - 1][n - 1]) + "]"
+        return res
 
     def __len__(self):
-        return
+        return len(self.bounds)
 
     def __contains__(self, args):
-        return True or False
+        if len(args) != len(self.bounds):
+            return False
+        else:
+            for i in range(len(args)):
+                if args[i] <= self.bounds[i][0] or args[i] >= self.bounds[i][1]:
+                    return False
+        return True
 
     def dimension(self):
         """[summary]"""
-        return
+        return len(self)
 
     def volume(self):
         """[summary]"""
-        return
+        res = self.bounds[0][1] - self.bounds[0][0]
+        for i in range(1, len(self.bounds)):
+            res = res * self.bounds[i][1] - self.bounds[i][0]
+        return res
 
     def indicator_function(self, args):
         """[summary]
